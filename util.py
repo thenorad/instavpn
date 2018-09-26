@@ -12,6 +12,7 @@ def run_command(cmd):
             shell=True))
 
 def check_os():
+        logger.debug(platform.linux_distribution())
     if platform.linux_distribution() != ('CentOS Linux', '7 (Core)'):
         logger.debug('OS: ' + ' '.join(platform.linux_distribution()))
         return False
