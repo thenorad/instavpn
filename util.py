@@ -52,7 +52,7 @@ def install_packages():
         return False
 
     logger.debug('Install development tools')
-    if not run_command("yum groupinstall -y \"Development Tools\"")
+    if not run_command('yum groupinstall -y "Development Tools"')
         return False
 
     logger.debug('Install vnstat')
