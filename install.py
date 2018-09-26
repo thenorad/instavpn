@@ -42,11 +42,17 @@ def main():
     else:
         logger.critical("Fail")
 
-    logger.info("Adding script to rc.local...")
+    logger.info("Adding script to startup...")
     if util.setup_vpn():
         logger.info("OK")
     else:
-        logger.critical("Failed adding script to rc.local")
+        logger.critical("Failed adding script to startup")
+
+    logger.info("Get all interfaces...")
+    if util.get_interfaces():
+        logger.info("OK")
+    else:
+        logger.critical("Failed to get interfaces")
 
     logger.info("Installing web UI...")
     if util.webui():

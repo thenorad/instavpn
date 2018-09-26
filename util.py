@@ -65,7 +65,6 @@ def install_packages():
 
     return True
 
-
 def setup_sysctl():
     if not run_command("sh files/sysctl.sh"):
         return False
@@ -110,31 +109,49 @@ def setup_vpn():
     if not run_command("cp files/setup-vpn.sh /etc/setup-vpn.sh"):
         return False
 
-    logger.debug('Add to rc.local')
-    try:
-        open("/etc/rc.local", "w").write("bash /etc/setup-vpn.sh\n" + open("/etc/rc.local").read())
-    except:
-        logger.exception("Exception setting up vpn:")
+    logger.debug('Add vpnserver systemd unit')
+    if not run_command("cp files/vpnserver.service /etc/systemd/system/vpnserver.service"):
         return False
 
-    logger.debug('Execute setup-vpn.sh')
-    if not run_command("bash /etc/setup-vpn.sh"):
+    logger.debug('chmod vpnserver systemd unit')
+    if not run_command("chmod 664 /etc/systemd/system/vpnserver.service"):
         return False
 
-    logger.debug('Ufw default forward policy')
+    logger.debug('Systemctl daemon reload')
+    if not run_command("systemctl daemon-reload"):
+        return False
 
-    try:
-        for line in fileinput.input("/etc/default/ufw", inplace=True):
-            print line.replace('DEFAULT_FORWARD_POLICY="DROP"', 'DEFAULT_FORWARD_POLICY="ACCEPT"'),
-        run_command("service ufw restart")
-    except OSError as e:
-        logger.warn('ufw not found')
+    logger.debug('Systemctl daemon start')
+    if not run_command("systemctl start vpnserver"):
+        return False
+
+    logger.debug('Add daemon to startup')
+    if not run_command("systemctl enable vpnserver"):
+        return False
+
+    logger.debug('iptables default policies setup')
+    if not run_command("iptables -P INPUT ACCEPT"):
+        return False
+
+    if not run_command("iptables -P OUTPUT ACCEPT"):
+        return False
+
+    if not run_command("iptables -P FORWARD ACCEPT"):
+        return False
+
+    if not run_command("iptables -S"):
+        return False
 
     logger.debug('Copy CLI')
     if not run_command("chmod +x files/instavpn && cp files/instavpn /usr/bin/instavpn"):
         return False
 
     return True
+
+def get_interfaces():
+    logger.debug('Get all interfaces')
+    interfaces = os.listdir('/sys/class/net/')
+    print (interfaces)
 
 CRONTAB = 'crontab -l | { cat; echo "* * * * * vnstati -s -i eth0 -o /opt/instavpn/public/images/vnstat.png"; } | crontab -'
 
