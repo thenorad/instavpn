@@ -12,7 +12,7 @@ def run_command(cmd):
             shell=True))
 
 def check_os():
-    if platform.linux_distribution() != ('Ubuntu', '14.04', 'trusty'):
+    if platform.linux_distribution() != ('CentOS', '7'):
         logger.debug('OS: ' + ' '.join(platform.linux_distribution()))
         return False
     return True
@@ -22,23 +22,23 @@ def not_sudo():
 
 def install_packages():
     logger.debug('Update package lists')
-    if not run_command("apt-get update"):
+    if not run_command("yum makecache"):
         return False
 
     logger.debug('Update packages')
-    if not run_command("apt-get -y upgrade"):
+    if not run_command("yum update -y"):
         return False
 
     logger.debug('Install node.js')
-    if not run_command("apt-get install -y nodejs-legacy npm build-essential libssl-dev"):
+    if not run_command("yum install -y nodejs-legacy npm build-essential libssl-dev"):
         return False
 
     logger.debug('Install vnstat')
-    if not run_command("apt-get install -y vnstat vnstati"):
+    if not run_command("yum install -y vnstat vnstati"):
         return False
 
     logger.debug('Install VPN server packages')
-    if not run_command("DEBIAN_FRONTEND=noninteractive apt-get install -q -y openswan xl2tpd ppp lsof"):
+    if not run_command("yum install -y openswan xl2tpd ppp lsof"):
         return False
 
     return True
