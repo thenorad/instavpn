@@ -1,10 +1,10 @@
 ![img](http://i.imgur.com/67dwCdA.png)
 ========
 
-## This project is deprecated! It will not work with next Ubuntu releases
+## This project is fork of InstaVPN! It will work with CentOS 7
 
 ### Requirements
-* Ubuntu 14.04
+* CentOS 7
 * 512 MB RAM
 
 ### Install
@@ -24,5 +24,3 @@ Browse at http://IP-ADDRESS:8080
 * `instavpn user list` - List all users
 * `instavpn web mode [on|off]` - Turn on/off web UI
 * `instavpn web set <username> <password>` - Set username/password for web UI
-
-[![Build Status](https://semaphoreapp.com/api/v1/projects/bbc573c4-5685-4e50-8552-eb5f1c9e53c8/302440/badge.png)](https://semaphoreapp.com/sockeye/instavpn)
