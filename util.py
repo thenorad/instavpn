@@ -12,14 +12,23 @@ def run_command(cmd):
             shell=True))
 
 def check_os():
-        logger.debug(platform.linux_distribution())
-    if platform.linux_distribution() != ('CentOS Linux', '7 (Core)'):
-        logger.debug('OS: ' + ' '.join(platform.linux_distribution()))
+    os_info = platform.linux_distribution()
+    os_dist = os_info[0]
+    os_ver = os_info[1]
+    if "CentOS" in os_dist and "7" in os_ver:
+        return True
+    else:
+        logger.debug('OS: '+ ' '.join(platform.linus_distribution()))
         return False
-    return True
 
-def not_sudo():
-    return os.getuid() != 0
+def check_kernel():
+    uname = os.uname()
+    kernel = uname[2]
+    if "el7" in kernel:
+        return True
+    else:
+        logger.debug('Kernel: ' + ' '.join(kernel))
+        return False
 
 def install_packages():
     logger.debug('Update package lists')

@@ -11,10 +11,12 @@ def main():
     if util.check_os():
         logger.info("OK")
     else:
-        logger.critical("You must use CentOS 7")
+        logger.critical("You should use CentOS 7")
 
-    if util.not_sudo():
-        logger.critical("Restart script as root")
+    if util.check_kernel():
+        logger.info("OK")
+    else:
+        logger.warning("You are using non official kernel")
 
     logger.info("Installing packages...")
     if util.install_packages():
