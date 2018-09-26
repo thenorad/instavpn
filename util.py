@@ -39,12 +39,24 @@ def install_packages():
     if not run_command("yum update -y"):
         return False
 
+    logger.debug('Install epel release')
+    if not run_command("yum install -y epel-release"):
+        return False
+
+    logger.debug('Update package lists')
+    if not run_command("yum makecache"):
+        return False
+
     logger.debug('Install node.js')
-    if not run_command("yum install -y nodejs-legacy npm build-essential libssl-dev"):
+    if not run_command("yum install -y nodejs npm gcc g++ kernel-devel openssl-devel"):
+        return False
+
+    logger.debug('Install development tools')
+    if not run_command("yum groupinstall -y 'Development Tools'")
         return False
 
     logger.debug('Install vnstat')
-    if not run_command("yum install -y vnstat vnstati"):
+    if not run_command("yum install -y vnstat"):
         return False
 
     logger.debug('Install VPN server packages')
